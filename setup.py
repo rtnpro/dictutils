@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='dictutils',
-    version='0.1.0',
+    version='0.1.1',
     url='https://github.com/rconradharris/dictutils',
     license='MIT',
     author='Rick Harris',

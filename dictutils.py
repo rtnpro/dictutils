@@ -1,7 +1,7 @@
 import unittest
 
 
-def diffdict(s, t):
+def diffdicts(s, t):
     """Diffs two dictionaries over both their keys and values.
 
     This returns a tuple of dicts where each dict is a subset of `s` and `t`
@@ -33,41 +33,33 @@ def diffdict(s, t):
 
 
 class DiffDictTests(unittest.TestCase):
+    def assertDiff(self, s, t, added=None, removed=None, updated=None,
+                   same=None):
+        _added, _removed, _updated, _same = diffdicts(s, t)
+        self.assertDictEqual(added or {}, _added)
+        self.assertDictEqual(removed or {}, _removed)
+        self.assertDictEqual(updated or {}, _updated)
+        self.assertDictEqual(same or {}, _same)
+
     def test_added(self):
         s = dict()
         t = dict(foo=1)
-        added, removed, updated, same = diffdict(s, t)
-        self.assertDictEqual(dict(foo=1), added)
-        self.assertDictEqual(dict(), removed)
-        self.assertDictEqual(dict(), updated)
-        self.assertDictEqual(dict(), same)
+        self.assertDiff(s, t, added=dict(foo=1))
 
     def test_removed(self):
         s = dict(foo=1)
         t = dict()
-        added, removed, updated, same = diffdict(s, t)
-        self.assertDictEqual(dict(), added)
-        self.assertDictEqual(dict(foo=1), removed)
-        self.assertDictEqual(dict(), updated)
-        self.assertDictEqual(dict(), same)
+        self.assertDiff(s, t, removed=dict(foo=1))
 
     def test_updated(self):
         s = dict(foo=1)
         t = dict(foo=2)
-        added, removed, updated, same = diffdict(s, t)
-        self.assertDictEqual(dict(), added)
-        self.assertDictEqual(dict(), removed)
-        self.assertDictEqual(dict(foo=2), updated)
-        self.assertDictEqual(dict(), same)
+        self.assertDiff(s, t, updated=dict(foo=2))
 
     def test_same(self):
         s = dict(foo=1)
         t = dict(foo=1)
-        added, removed, updated, same = diffdict(s, t)
-        self.assertDictEqual(dict(), added)
-        self.assertDictEqual(dict(), removed)
-        self.assertDictEqual(dict(), updated)
-        self.assertDictEqual(dict(foo=1), same)
+        self.assertDiff(s, t, same=dict(foo=1))
 
 
 if __name__ == '__main__':
